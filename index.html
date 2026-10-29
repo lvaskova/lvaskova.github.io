@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="sk" class="h-full bg-slate-50 text-slate-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomický Atlas Mozgu</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        /* Interactive SVG Path hover and selection effects */
+        .brain-region {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            stroke: #475569;
+            stroke-width: 1.5;
+            stroke-dasharray: 4;
+        }
+        .brain-region:hover {
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15));
+            stroke-dasharray: 0;
+            stroke-width: 2.5;
+            stroke: #2563eb;
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between selection:bg-blue-500 selection:text-white">
+
+    <header class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between border-b border-slate-200 bg-white shadow-sm sticky top-0 z-50">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchSlide('overview')">
+            <div class="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-md">
+                <i class="fa-solid fa-brain text-base"></i>
+            </div>
+            <div>
+                <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-900 leading-none">Anatomický Atlas Mozgu</h1>
+                <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">Interaktívna prezentácia k 3D modelu</p>
+            </div>
+        </div>
+
+        <!-- Slide counter badge in header -->
+        <div class="hidden sm:flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-600" id="slide-indicator-header">
+            <i class="fa-solid fa-layer-group text-slate-400"></i>
+            <span id="header-slide-num">1 / 9</span>
+        </div>
+    </header>
+
+    <main id="presentation-container" class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex items-center justify-center">
+
+        <!-- OVERVIEW SLIDE (ANATOMICAL DIAGRAM & TILES) -->
+        <div id="slide-overview" class="slide-content w-full space-y-6 sm:space-y-8">
+            
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Ľudský Mozog & Jeho Štruktúry</h2>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Kliknite na požadovanú časť na schéme, zvoľte si kartičku nižšie alebo použite navigáciu prechádzania prezentácie.
+                </p>
+            </div>
+
+            <!-- INTERACTIVE VECTOR BRAIN ANATOMY DIAGRAM -->
+            <div class="p-3 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden flex flex-col items-center">
+                <div class="w-full max-w-xl aspect-[4/3] relative">
+                    <svg viewBox="0 0 600 450" class="w-full h-auto drop-shadow-md max-h-[50vh] sm:max-h-none" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(-1);">
+                        <defs>
+                            <!-- Color Gradients for All Regions -->
+                            <linearGradient id="grad-frontal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#2563eb" stop-opacity="0.75"/>
+                            </linearGradient>
+                            <linearGradient id="grad-parietal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.75"/>
+                            </linearGradient>
+                            <linearGradient id="grad-temporal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.75"/>
+                            </linearGradient>
+                            <linearGradient id="grad-occipital" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#0891b2" stop-opacity="0.75"/>
+                            </linearGradient>
+                            <linearGradient id="grad-limbic" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ec4899" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#db2777" stop-opacity="0.75"/>
+                            </linearGradient>
+                            <linearGradient id="grad-cerebellum" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10b981" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#059669" stop-opacity="0.75"/>
+                            </linearGradient>
+                            <linearGradient id="grad-stem" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#d97706" stop-opacity="0.75"/>
+                            </linearGradient>
+                            <linearGradient id="grad-callosum" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.85"/>
+                                <stop offset="100%" stop-color="#e11d48" stop-opacity="0.75"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Anatomical Brain Regions (SVG Path Shapes) -->
+                        <g>
+                            <!-- Čelný lalok (Frontal Lobe) -->
+                            <path class="brain-region" fill="url(#grad-frontal)" onclick="switchSlide('frontalny-lalok')"
+                                  d="M 160,220 C 120,190 120,130 180,80 C 230,40 310,40 340,70 C 320,120 280,180 230,220 C 200,240 170,230 160,220 Z"/>
+                            
+                            <!-- Temenný lalok (Parietal Lobe) -->
+                            <path class="brain-region" fill="url(#grad-parietal)" onclick="switchSlide('parietalny-lalok')"
+                                  d="M 340,70 C 390,70 440,100 460,140 C 430,190 370,210 320,200 C 310,160 320,110 340,70 Z"/>
+
+                            <!-- Zátylkový lalok (Occipital Lobe) -->
+                            <path class="brain-region" fill="url(#grad-occipital)" onclick="switchSlide('okcipitalny-lalok')"
+                                  d="M 460,140 C 490,170 500,220 470,260 C 420,270 390,240 380,220 C 410,180 440,160 460,140 Z"/>
+
+                            <!-- Spánkový lalok (Temporal Lobe) -->
+                            <path class="brain-region" fill="url(#grad-temporal)" onclick="switchSlide('temporalny-lalok')"
+                                  d="M 230,220 C 280,180 340,190 380,220 C 370,260 300,280 240,270 C 220,250 220,230 230,220 Z"/>
+
+                            <!-- Svorkovité teleso (Corpus Callosum) -->
+                            <path class="brain-region" fill="url(#grad-callosum)" onclick="switchSlide('svorkovite-teleso')"
+                                  d="M 230,150 C 260,120 330,120 360,150 C 340,165 280,165 230,150 Z"/>
+
+                            <!-- Limbický systém / Medzimozog (Limbic System & Diencephalon) -->
+                            <path class="brain-region" fill="url(#grad-limbic)" onclick="switchSlide('limbicky-system')"
+                                  d="M 250,170 C 300,160 340,170 350,200 C 330,230 270,230 250,200 Z"/>
+
+                            <!-- Mozoček (Cerebellum) -->
+                            <path class="brain-region" fill="url(#grad-cerebellum)" onclick="switchSlide('mozecek')"
+                                  d="M 380,270 C 440,270 470,300 450,350 C 390,370 360,330 360,300 C 360,280 370,270 380,270 Z"/>
+
+                            <!-- Mozgový kmeň (Brain Stem) -->
+                            <path class="brain-region" fill="url(#grad-stem)" onclick="switchSlide('mozgovy-kmen')"
+                                  d="M 300,280 C 340,280 350,310 340,390 C 310,400 290,390 280,350 C 280,310 290,290 300,280 Z"/>
+                        </g>
+
+                        <!-- SVG Text Labels -->
+                        <g transform="translate(600 0) scale(-1 1)" font-family="Inter, sans-serif" font-weight="700" font-size="11" fill="#ffffff" text-anchor="middle" pointer-events="none">
+                            <text x="380" y="110">Čelný lalok</text>
+                            <text x="215" y="130">Temenný lalok</text>
+                            <text x="160" y="210">Zátylkový</text>
+                            <text x="310" y="142" font-size="9" fill="#ffffff">Corpus Callosum</text>
+                            <text x="300" y="195" font-size="10" fill="#ffffff">Limbický systém</text>
+                            <text x="310" y="250">Spánkový lalok</text>
+                            <text x="190" y="320">Mozoček</text>
+                            <text x="285" y="340" font-size="10">Mozgový</text>
+                            <text x="285" y="355" font-size="10">kmeň</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Grid selection cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-2">
+                <div onclick="switchSlide('frontalny-lalok')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-blue-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs group-hover:bg-blue-600 group-hover:text-white transition-colors">01</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Čelný lalok <span class="text-[11px] font-normal text-slate-500 block italic">Lobus frontalis</span></h3>
+                    <p class="text-xs text-slate-600">Plánovanie, reč (Brocova oblasť), rozhodovanie, motorická kôra.</p>
+                </div>
+
+                <div onclick="switchSlide('parietalny-lalok')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-purple-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-xs group-hover:bg-purple-600 group-hover:text-white transition-colors">02</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-purple-600 transition-colors">Temenný lalok <span class="text-[11px] font-normal text-slate-500 block italic">Lobus parietalis</span></h3>
+                    <p class="text-xs text-slate-600">Spracovanie hmatu, teplota, bolesť a priestorová orientácia.</p>
+                </div>
+
+                <div onclick="switchSlide('temporalny-lalok')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-indigo-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs group-hover:bg-indigo-600 group-hover:text-white transition-colors">03</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">Spánkový lalok <span class="text-[11px] font-normal text-slate-500 block italic">Lobus temporalis</span></h3>
+                    <p class="text-xs text-slate-600">Sluch, porozumenie reči (Wernickeova oblasť) a pamäť.</p>
+                </div>
+
+                <div onclick="switchSlide('okcipitalny-lalok')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-cyan-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center font-bold text-xs group-hover:bg-cyan-600 group-hover:text-white transition-colors">04</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">Zátylkový lalok <span class="text-[11px] font-normal text-slate-500 block italic">Lobus occipitalis</span></h3>
+                    <p class="text-xs text-slate-600">Primárne zrakové centrum a spracovanie vizuálneho obrazu.</p>
+                </div>
+
+                <div onclick="switchSlide('limbicky-system')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-pink-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center font-bold text-xs group-hover:bg-pink-600 group-hover:text-white transition-colors">05</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-pink-600 transition-colors">Limbický systém <span class="text-[11px] font-normal text-slate-500 block italic">Systema limbicum</span></h3>
+                    <p class="text-xs text-slate-600">Emócie (amygdala), dlhodobá pamäť (hippokampus), talamus a hypotalamus.</p>
+                </div>
+
+                <div onclick="switchSlide('svorkovite-teleso')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-rose-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs group-hover:bg-rose-600 group-hover:text-white transition-colors">06</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-rose-600 transition-colors">Svorkovité teleso <span class="text-[11px] font-normal text-slate-500 block italic">Corpus callosum</span></h3>
+                    <p class="text-xs text-slate-600">Mohutný zväzok nervových vlákien spájajúci ľavú a pravú hemisféru.</p>
+                </div>
+
+                <div onclick="switchSlide('mozecek')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-emerald-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs group-hover:bg-emerald-600 group-hover:text-white transition-colors">07</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">Mozoček <span class="text-[11px] font-normal text-slate-500 block italic">Cerebellum</span></h3>
+                    <p class="text-xs text-slate-600">Koordinácia pohybov, rovnováha, svalový tonus a motorická pamäť.</p>
+                </div>
+
+                <div onclick="switchSlide('mozgovy-kmen')" class="p-4 rounded-xl bg-white border border-slate-200 hover:border-amber-500 cursor-pointer transition-all hover:shadow-md space-y-2 group">
+                    <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs group-hover:bg-amber-600 group-hover:text-white transition-colors">08</div>
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors">Mozgový kmeň <span class="text-[11px] font-normal text-slate-500 block italic">Truncus encephalicus</span></h3>
+                    <p class="text-xs text-slate-600">Predĺžená miecha, Varolov most, stredný mozog a dôležité životné reflexy.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- INDIVIDUAL ANATOMICAL SLIDES -->
+
+        <!-- 01. Frontal Lobe Slide -->
+        <div id="slide-frontalny-lalok" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Lobus frontalis</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Čelný lalok</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-blue-50 border border-blue-100 text-xs sm:text-sm text-blue-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Najväčší lalok mozgovej kôry, umiestnený v prednej časti lebky. Zodpovedá za vyššiu kognitívnu činnosť, plánovanie, osobnostné črty a riadenie úmyselnej motoriky.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-blue-600 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> Prefrontálna kôra
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Exekutívne funkcie, abstraktné myslenie, rozhodovanie, vyjadrovanie osobnosti a potláčanie nevhodných impulzov.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-blue-600 flex items-center gap-2">
+                        <i class="fa-solid fa-comment-dots"></i> Brocovo rečové centrum
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Motorické centrum reči v dominantnej hemisfére. Riadi svalovú artikuláciu hlasiviek, jazyka a úst pre tvorbu slov.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 md:col-span-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-blue-600 flex items-center gap-2">
+                        <i class="fa-solid fa-child-reaching"></i> Primárna motorická kôra (Gyrus praecentralis)
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Vytvára nervové impulzy pre voliteľný (úmyselný) pohyb kostrového svalstva tela vysielané cez pyramídové dráhy.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 02. Parietal Lobe Slide -->
+        <div id="slide-parietalny-lalok" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Lobus parietalis</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Temenný lalok</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-purple-50 border border-purple-100 text-xs sm:text-sm text-purple-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Situovaný v hornej strednej časti kôry. Integratívne centrum pre somatické zmyslové vnímanie a priestorovú orientáciu.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-purple-600 flex items-center gap-2">
+                        <i class="fa-solid fa-hand"></i> Somatosenzorická kôra (Gyrus postcentralis)
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Prijíma a spracúva hmatové podnety, tlak, vibrácie, zmeny teploty a pocity bolesti z povrchu aj hĺbky celého tela.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-purple-600 flex items-center gap-2">
+                        <i class="fa-solid fa-compass"></i> Propriocepcia & Priestorová mapa
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Spracováva informácie o polohách kĺbov a svalov, spája vizuálne podnety s pohybom a vytvára vnútorný obraz tela v priestore.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03. Temporal Lobe Slide -->
+        <div id="slide-temporalny-lalok" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Lobus temporalis</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Spánkový lalok</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-indigo-50 border border-indigo-100 text-xs sm:text-sm text-indigo-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Umiestnený na bočných stranách pod postrannou brázdou. Obsahuje primárne sluchové oblasti, centrum pre rozumové chápanie reči a pamäťové štruktúry.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-indigo-600 flex items-center gap-2">
+                        <i class="fa-solid fa-ear-listen"></i> Sluchová kôra & Wernickeovo centrum
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Spracovanie akustických vnemov a porozumenie hovorenej aj písanej reči.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-indigo-600 flex items-center gap-2">
+                        <i class="fa-solid fa-brain"></i> Hippokampus
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Kľúčový pre konsolidáciu pamäti – prevod informácií z krátkodobej do dlhodobej pamäti a priestorovú navigáciu.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04. Occipital Lobe Slide -->
+        <div id="slide-okcipitalny-lalok" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-cyan-600 uppercase tracking-wider">Lobus occipitalis</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Zátylkový lalok</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-cyan-50 border border-cyan-100 text-xs sm:text-sm text-cyan-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Najzadnejšia časť mozgovej kôry, plne špecializovaná na prijímanie a analýzu zrakových signálov zo sietnice oka.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-cyan-600 flex items-center gap-2">
+                        <i class="fa-solid fa-eye"></i> Primárna zraková kôra (V1)
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Prijíma informácie zo zrakového nervu a dešifruje základné vlastnosti obrazu ako línie, hrany, kontrasting a farby.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-cyan-600 flex items-center gap-2">
+                        <i class="fa-solid fa-icons"></i> Vizuálna asociácia
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Rozpoznávanie komplexných tvarov, objektov, tvárí, čítanie písmen a sledovanie pohybu predmetov v priestore.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 05. Limbic System & Diencephalon Slide -->
+        <div id="slide-limbicky-system" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-pink-600 uppercase tracking-wider">Systema limbicum & Diencephalon</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Limbický systém & Medzimozog</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-pink-50 border border-pink-100 text-xs sm:text-sm text-pink-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Hlboké subkortikálne štruktúry zodpovedné za emočné reakcie, inštinkty, hormonálnu reguláciu a filtráciu zmyslových informácií.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-pink-600 flex items-center gap-2">
+                        <i class="fa-solid fa-heart-pulse"></i> Amygdala & Hippokampus
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Spracovanie strachu, hnevu, pocitov odmeny a ich prepojenie s dlhodobou pamäťou.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-pink-600 flex items-center gap-2">
+                        <i class="fa-solid fa-temperature-half"></i> Talamus & Hypotalamus
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Talamus funguje ako hlavná zmyslová prepájacia stanica. Hypotalamus riadi autonómny systém, vnútornú teplotu, smäd, hlad a hormóny (cez podmozgovú žľazu - hypofýzu).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 06. Corpus Callosum Slide -->
+        <div id="slide-svorkovite-teleso" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Corpus callosum</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Svorkovité teleso</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-rose-50 border border-rose-100 text-xs sm:text-sm text-rose-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Masívny zväzok viac ako 200 miliónov myelinizovaných nervových vlákien (komisurálne dráhy), ktorý prepája pravú a ľavú mozgovú hemisféru.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-rose-600 flex items-center gap-2">
+                        <i class="fa-solid fa-network-wired"></i> Medzihemisférová komunikácia
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Umožňuje okamžité zdieľanie a koordináciu informácií medzi analytickou ľavou a kreatívnou/priestorovou pravou hemisférou.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-rose-600 flex items-center gap-2">
+                        <i class="fa-solid fa-diagram-project"></i> Integrácia motoriky a zmyslov
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Zabezpečuje synchronizovanú prácu oboch rúk a obojstranné spracovanie zrakového aj sluchového poľa.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 07. Cerebellum Slide -->
+        <div id="slide-mozecek" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Cerebellum</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Mozoček</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-emerald-50 border border-emerald-100 text-xs sm:text-sm text-emerald-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Nachádza sa v zadnej jame lebkovej pod zátylkovým lalokom. Obsahuje viac ako polovicu všetkých neurónov ľudského mozgu.
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-emerald-600 flex items-center gap-2">
+                        <i class="fa-solid fa-person-running"></i> Koordinácia & Rovnováha
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Precízne dolaďuje svalové pohyby, udáva presné časovanie svalových sťahov a udržiava vzpriamený postoj tela.
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-emerald-600 flex items-center gap-2">
+                        <i class="fa-solid fa-person-biking"></i> Motorické učenie
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Ukladanie automatizovaných pohybových návykov (písanie, hra na nástroj, športové úkony) bez nutnosti vedomého premýšľania.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 08. Brain Stem Slide -->
+        <div id="slide-mozgovy-kmen" class="slide-content w-full space-y-5 sm:space-y-6 hidden">
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-4 gap-3">
+                <div>
+                    <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Truncus encephalicus</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Mozgový kmeň</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchSlide('overview')" class="px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-grid-2"></i> Prehľad
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-amber-50 border border-amber-100 text-xs sm:text-sm text-amber-950 leading-relaxed">
+                <strong>Anatomická charakteristika:</strong> Spája mozgové hemisféry s miechou. Pozostáva zo stredného mozgu (mesencephalon), Varolovho mosta (pons) a predĺženej miechy (medulla oblongata).
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-amber-600 flex items-center gap-2">
+                        <i class="fa-solid fa-heart-pulse"></i> Životne dôležité centrá
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Predĺžená miecha automaticky riadi dýchanie, srdcovú frekvenciu, krvný tlak a bezpodmienečné reflexy (vracanie, kašeľ, prehĺtanie).
+                    </p>
+                </div>
+                <div class="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+                    <h3 class="text-xs sm:text-sm font-bold text-amber-600 flex items-center gap-2">
+                        <i class="fa-solid fa-moon"></i> Retikulárna formácia & Spánok
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Sústava neurónových dráh (ARAS) zodpovedná za udržiavanie vedomia, striedanie stavu bdenia a spánku a celkovú dráždivosť kôry.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="sticky bottom-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-200 py-3 px-4 shadow-lg z-50">
+        <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+            <button onclick="prevSlide()" class="px-3.5 sm:px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shadow-sm active:scale-95">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+                <span class="hidden sm:inline">Predchádzajúci</span>
+            </button>
+
+            <div class="flex items-center gap-2">
+                <span id="current-slide-title" class="text-xs font-bold text-slate-800 truncate max-w-[140px] sm:max-w-xs text-center">Úvodná schéma</span>
+                <span id="slide-indicator-footer" class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">1/9</span>
+            </div>
+
+            <button onclick="nextSlide()" class="px-3.5 sm:px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shadow-sm active:scale-95">
+                <span class="hidden sm:inline">Nasledujúci</span>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Array order for presentation slides
+        const slideSequence = [
+            'overview',
+            'frontalny-lalok',
+            'parietalny-lalok',
+            'temporalny-lalok',
+            'okcipitalny-lalok',
+            'limbicky-system',
+            'svorkovite-teleso',
+            'mozecek',
+            'mozgovy-kmen'
+        ];
+
+        // Kratke kotvy podla nazvov slidov v obsahu.
+        const slideAnchors = {
+            'overview': 'uvod',
+            'frontalny-lalok': 'celny',
+            'parietalny-lalok': 'temenny',
+            'temporalny-lalok': 'spankovy',
+            'okcipitalny-lalok': 'zatylny',
+            'limbicky-system': 'limbicky',
+            'svorkovite-teleso': 'svorkovite',
+            'mozecek': 'mozecek',
+            'mozgovy-kmen': 'kmen'
+        };
+
+        const anchorSlides = Object.fromEntries(
+            Object.entries(slideAnchors).map(([slideId, anchor]) => [anchor, slideId])
+        );
+const slideTitles = {
+            'overview': 'Úvodná schéma',
+            'frontalny-lalok': 'Čelný lalok',
+            'parietalny-lalok': 'Temenný lalok',
+            'temporalny-lalok': 'Spánkový lalok',
+            'okcipitalny-lalok': 'Zátylkový lalok',
+            'limbicky-system': 'Limbický systém',
+            'svorkovite-teleso': 'Svorkovité teleso',
+            'mozecek': 'Mozoček',
+            'mozgovy-kmen': 'Mozgový kmeň'
+        };
+
+        let currentSlideIndex = 0;
+
+        // Global slide switching function
+        window.switchSlide = function(slideId) {
+            // Find index in sequence
+            const foundIndex = slideSequence.indexOf(slideId);
+            if (foundIndex !== -1) {
+                currentSlideIndex = foundIndex;
+            } else {
+                currentSlideIndex = 0;
+                slideId = 'overview';
+            }
+
+            // Hide all slide containers
+            const slides = document.querySelectorAll('.slide-content');
+            slides.forEach(slide => {
+                slide.classList.add('hidden');
+            });
+
+            // Target selected slide
+            let target = document.getElementById('slide-' + slideId);
+            if (!target) {
+                target = document.getElementById('slide-overview');
+                slideId = 'overview';
+                currentSlideIndex = 0;
+            }
+
+            // Show selected slide
+            target.classList.remove('hidden');
+
+            // Update Slide Indicators
+            const slideNumStr = `${currentSlideIndex + 1} / ${slideSequence.length}`;
+            document.getElementById('slide-indicator-footer').textContent = `${currentSlideIndex + 1}/${slideSequence.length}`;
+            document.getElementById('header-slide-num').textContent = slideNumStr;
+            document.getElementById('current-slide-title').textContent = slideTitles[slideId] || 'Prezentácia';
+
+            // Keep the URL hash synchronized with the currently visible slide.
+            try {
+                const wantedHash = '#' + (slideAnchors[slideId] || slideId);
+                if (window.location.hash !== wantedHash) {
+                    history.replaceState(null, '', wantedHash);
+                }
+            } catch (e) {
+                // Fallback for restricted previews
+            }
+
+            // Scroll smoothly to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Next & Previous slide triggers
+        window.nextSlide = function() {
+            let nextIndex = currentSlideIndex + 1;
+            if (nextIndex >= slideSequence.length) {
+                nextIndex = 0; // Loop back to start
+            }
+            window.switchSlide(slideSequence[nextIndex]);
+        };
+
+        window.prevSlide = function() {
+            let prevIndex = currentSlideIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = slideSequence.length - 1; // Loop to end
+            }
+            window.switchSlide(slideSequence[prevIndex]);
+        };
+
+        // Keyboard Arrow Key Navigation (Left / Right)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                window.nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                window.prevSlide();
+            }
+        });
+
+        // Mobile Touch Swipe Navigation (Touchstart & Touchend)
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const presentationContainer = document.body;
+
+        presentationContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        presentationContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50; // Minimum horizontal distance in px
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swiped Left -> Go Next
+                window.nextSlide();
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                // Swiped Right -> Go Prev
+                window.prevSlide();
+            }
+        }
+
+        // Read the URL hash and open the matching slide.
+        // Works when this HTML document itself is opened with #slide-id.
+        function openSlideFromHash() {
+            const hash = decodeURIComponent(window.location.hash.slice(1));
+            const slideId = anchorSlides[hash] || hash;
+            if (slideSequence.includes(slideId)) {
+                window.switchSlide(slideId);
+            } else {
+                window.switchSlide('overview');
+            }
+        }
+
+        // The script is at the end of the document, so the slides already exist.
+        openSlideFromHash();
+
+        // Support manual hash edits and browser back/forward navigation.
+        window.addEventListener('hashchange', openSlideFromHash);
+        window.addEventListener('popstate', openSlideFromHash);
+    </script>
+
+</body>
+</html>
