@@ -70,14 +70,14 @@ body{font-family:'Inter',sans-serif}
 // cards [[ikona, nadpis, text]], more [nadpis, text], path (SVG), label [text, x, y, veľkosť, farba]
 const S = [
 {id:'frontalny-lalok',a:'celny',c:'blue',g:['#3b82f6','#2563eb'],
- title:'Čelný lalok predného mozgu',short:'Čelný lalok predného mozgu',latin:'Lobus frontalis',
+ title:'Čelový lalok predného mozgu',short:'Čelový lalok predného mozgu',latin:'Lobus frontalis',
  blurb:'Plánovanie, reč (Brocova oblasť), rozhodovanie, motorická kôra.',
  sum:'Najväčší lalok mozgovej kôry predného mozgu (prosencephalon), umiestnený v prednej časti lebky. Zodpovedá za vyššiu kognitívnu činnosť, plánovanie, osobnostné črty a riadenie úmyselnej motoriky.',
  cards:[['fa-sliders','Prefrontálna kôra','Exekutívne funkcie, abstraktné myslenie, rozhodovanie, vyjadrovanie osobnosti a potláčanie nevhodných impulzov.'],
  ['fa-comment-dots','Brocovo rečové centrum','Motorické centrum reči v dominantnej hemisfére. Riadi svalovú artikuláciu hlasiviek, jazyka a úst pre tvorbu slov.'],
  ['fa-child-reaching','Primárna motorická kôra (Gyrus praecentralis)','Vytvára nervové impulzy pre úmyselný pohyb kostrového svalstva vysielané cez pyramídové dráhy. Od Rolandovej ryhy ju oddeľuje temenný lalok.']],
- more:['Klinický význam','Poškodenie čelného laloku sa prejavuje zmenami osobnosti, impulzivitou, stratou iniciatívy a problémami s plánovaním. Poškodenie Brocovej oblasti vyvoláva Brocovu afáziu – človek rozumie reči, no ťažko ju tvorí. Čelný lalok dozrieva ako posledný, približne do 25. roku života.'],
- path:'M 160,220 C 120,190 120,130 180,80 C 230,40 310,40 340,70 C 320,120 280,180 230,220 C 200,240 170,230 160,220 Z',label:['Čelný lalok|predného mozgu',380,104,11]},
+ more:['Klinický význam','Poškodenie čelného laloku sa prejavuje zmenami osobnosti, impulzivitou, stratou iniciatívy a problémami s plánovaním. Poškodenie Brocovej oblasti vyvoláva Brocovu afáziu – človek rozumie reči, no ťažko ju tvorí. Čelový lalok dozrieva ako posledný, približne do 25. roku života.'],
+ path:'M 160,220 C 120,190 120,130 180,80 C 230,40 310,40 340,70 C 320,120 280,180 230,220 C 200,240 170,230 160,220 Z',label:['Čelový lalok|predného mozgu',380,104,11]},
 {id:'parietalny-lalok',a:'temenny',c:'purple',g:['#8b5cf6','#7c3aed'],
  title:'Temenný lalok predného mozgu',short:'Temenný lalok predného mozgu',latin:'Lobus parietalis',
  blurb:'Spracovanie hmatu, teplota, bolesť a priestorová orientácia.',
@@ -105,15 +105,15 @@ const S = [
  ['fa-route','Zrakové dráhy','Informácia z oboch očí prichádza cez zrakovú dráhu a talamus. Ľavá polovica zorného poľa sa spracúva v pravom laloku a naopak.']],
  more:['Klinický význam','Poškodenie záhlavného laloku môže spôsobiť výpadky zorného poľa (hemianopsiu) alebo kortikálnu slepotu, pri ktorej sú oči zdravé, ale mozog obraz nespracuje. Časť zrakového spracovania prebieha v dvoch prúdoch – „čo to je“ (do spánkového laloku) a „kde to je“ (do temenného laloku).'],
  path:'M 460,140 C 490,170 500,220 470,260 C 420,270 390,240 380,220 C 410,180 440,160 460,140 Z',label:['Záhlavný',160,210,11]},
-{id:'limbicky-system',a:'limbicky',c:'pink',g:['#ec4899','#db2777'],
- title:'Limbický systém & Medzimozog',short:'Limbický systém',latin:'Systema limbicum & Diencephalon',
- blurb:'Emócie (amygdala), dlhodobá pamäť (hippokampus), talamus a hypotalamus.',
- sum:'Hlboké subkortikálne štruktúry zodpovedné za emočné reakcie, inštinkty, hormonálnu reguláciu a filtráciu zmyslových informácií.',
- cards:[['fa-heart-pulse','Amygdala & Hippokampus','Spracovanie strachu, hnevu, pocitov odmeny a ich prepojenie s dlhodobou pamäťou.'],
- ['fa-temperature-half','Talamus & Hypotalamus','Talamus funguje ako hlavná zmyslová prepájacia stanica. Hypotalamus riadi autonómny systém, vnútornú teplotu, smäd, hlad a hormóny (cez podmozgovú žľazu – hypofýzu).'],
+{id:'medzimozog',a:'medzimozog',c:'pink',g:['#ec4899','#db2777'],
+ title:'Medzimozog & Limbický systém',short:'Medzimozog & Limbický systém',latin:'Diencephalon & Systema limbicum',
+ blurb:'Talamus a hypotalamus, emócie (amygdala) a dlhodobá pamäť (hippokampus).',
+ sum:'Hlboké štruktúry mozgu – medzimozog (talamus, hypotalamus, epifýza) a limbický systém – zodpovedné za filtráciu zmyslových informácií, hormonálnu reguláciu, inštinkty a emočné reakcie.',
+ cards:[['fa-temperature-half','Talamus & Hypotalamus','Talamus funguje ako hlavná zmyslová prepájacia stanica. Hypotalamus riadi autonómny systém, vnútornú teplotu, smäd, hlad a hormóny (cez podmozgovú žľazu – hypofýzu).'],
+ ['fa-heart-pulse','Amygdala & Hippokampus','Spracovanie strachu, hnevu, pocitov odmeny a ich prepojenie s dlhodobou pamäťou.'],
  ['fa-seedling','Epifýza & Gyrus cinguli','Epifýza vylučuje melatonín a riadi denný rytmus. Gyrus cinguli prepája emócie s pozornosťou a motiváciou.']],
- more:['Zaujímavosť','Amygdala vyhodnotí hrozbu skôr, než si ju stihneme uvedomiť – preto reagujeme strachom takmer okamžite. Hypotalamus je veľký len ako mandľa, no udržiava rovnováhu celého organizmu (homeostázu). Všetky zmysly okrem čuchu prechádzajú cez talamus.'],
- path:'M 250,170 C 300,160 340,170 350,200 C 330,230 270,230 250,200 Z',label:['Limbický systém',300,195,10]},
+ more:['Zaujímavosť','Hypotalamus je veľký len ako mandľa, no udržiava rovnováhu celého organizmu (homeostázu). Všetky zmysly okrem čuchu prechádzajú cez talamus. Amygdala vyhodnotí hrozbu skôr, než si ju stihneme uvedomiť – preto reagujeme strachom takmer okamžite.'],
+ path:'M 250,170 C 300,160 340,170 350,200 C 330,230 270,230 250,200 Z',label:['Medzimozog &|Limbický systém',300,190,10]},
 {id:'svorkovite-teleso',a:'svorkovite',c:'rose',g:['#f43f5e','#e11d48'],
  title:'Svorkovité teleso',short:'Svorkovité teleso',latin:'Corpus callosum',
  blurb:'Mohutný zväzok nervových vlákien spájajúci ľavú a pravú hemisféru.',
@@ -164,6 +164,7 @@ const TOTAL = S.length + 1;
 const seq = ['overview', ...S.map(s => s.id)];
 const anchorOf = Object.fromEntries([['overview','uvod'], ...S.map(s => [s.id, s.a])]);
 const slideOfAnchor = Object.fromEntries(Object.entries(anchorOf).map(([k, v]) => [v, k]));
+slideOfAnchor['limbicky'] = 'medzimozog'; slideOfAnchor['limbicky-system'] = 'medzimozog'; // staré kotvy
 slideOfAnchor['kmen'] = 'stredny-mozog';   // stará kotva
 slideOfAnchor['zatylny'] = 'okcipitalny-lalok'; // stará kotva
 const titleOf = Object.fromEntries([['overview','Úvodná schéma'], ...S.map(s => [s.id, s.short])]);
